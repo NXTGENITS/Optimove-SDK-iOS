@@ -159,6 +159,7 @@ extension Optimobile {
     @available(iOS, deprecated: 10.0)
     fileprivate static func requestTokenLegacy() {
         // Determine the type of notifications we want to ask permission for, for example we may want to alert the user, update the badge number and play a sound
+        #if !os(visionOS)
         let notificationTypes: UIUserNotificationType = [UIUserNotificationType.alert, UIUserNotificationType.badge, UIUserNotificationType.sound]
 
         // Create settings  based on those notification types we want the user to accept
@@ -171,6 +172,7 @@ extension Optimobile {
         // See delegate methods in AppDelegate - the AppDelegate conforms to the UIApplicationDelegate protocol
         application.registerUserNotificationSettings(pushNotificationSettings)
         application.registerForRemoteNotifications()
+        #endif
     }
 
     /**
@@ -251,7 +253,9 @@ extension Optimobile {
                 }
             } else {
                 DispatchQueue.main.async {
+                    #if !os(visionOS)
                     UIApplication.shared.openURL(url)
+                    #endif
                 }
             }
         }

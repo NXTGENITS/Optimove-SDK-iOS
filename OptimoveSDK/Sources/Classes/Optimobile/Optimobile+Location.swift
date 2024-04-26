@@ -11,6 +11,7 @@ extension Optimobile {
         Optimobile.trackEvent(eventType: OptimobileEvent.ENGAGE_LOCATION_UPDATED, properties: parameters, immediateFlush: true)
     }
 
+    #if !os(visionOS)
     static func trackIBeaconProximity(beacon: CLBeacon) {
         var parameters = [
             "type": 1,
@@ -27,6 +28,7 @@ extension Optimobile {
 
         Optimobile.trackEvent(eventType: OptimobileEvent.ENGAGE_BEACON_ENTERED_PROXIMITY, properties: parameters, immediateFlush: true)
     }
+    #endif
 
     static func trackEddystoneBeaconProximity(hexNamespace: String, hexInstance: String, distanceMeters: Double?) {
         var parameters = [

@@ -74,7 +74,11 @@ extension Optimobile {
             os["version"] = ProcessInfo.processInfo.operatingSystemVersionString as AnyObject?
         } else {
             os["id"] = OSTypeID.osTypeIDiOS.rawValue
+            #if os(visionOS)
+            os["version"] = "17.0" as AnyObject?
+            #else
             os["version"] = UIDevice.current.systemVersion as AnyObject?
+            #endif
         }
 
         if NSLocale.preferredLanguages.count >= 1 {
@@ -118,7 +122,11 @@ extension Optimobile {
         if Platform.isMacintosh {
             runtime["version"] = ProcessInfo.processInfo.operatingSystemVersionString as AnyObject?
         } else {
+            #if os(visionOS)
+            runtime["version"] = "17.0" as AnyObject?
+            #else
             runtime["version"] = UIDevice.current.systemVersion as AnyObject?
+            #endif
         }
 
         return runtime

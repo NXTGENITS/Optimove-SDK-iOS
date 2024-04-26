@@ -38,10 +38,17 @@ final class LocationServiceImpl {
         "NSLocationAlwaysUsageDescription",
         "NSLocationWhenInUseUsageDescription",
     ]
+    #if os(visionOS)
+    private let authorizedStatuses: [CLAuthorizationStatus] = [
+        //.authorizedAlways,
+        .authorizedWhenInUse,
+    ]
+    #else
     private let authorizedStatuses: [CLAuthorizationStatus] = [
         .authorizedAlways,
         .authorizedWhenInUse,
     ]
+    #endif
     private let desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyKilometer
     private var hasDescriptions = false
 

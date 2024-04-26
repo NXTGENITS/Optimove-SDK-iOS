@@ -219,7 +219,11 @@ final class InAppPresenter: NSObject, WKScriptMessageHandler, WKNavigationDelega
         }
 
         // Window / frame setup
+        #if os(visionOS)
+        window = UIWindow(frame: CGRect(x: 0.0, y: 0.0, width: 1180.0, height: 840.0))
+        #else
         window = UIWindow(frame: UIScreen.main.bounds)
+        #endif
         window!.windowLevel = UIWindow.Level.alert
         window!.rootViewController = UIViewController()
 
@@ -287,7 +291,11 @@ final class InAppPresenter: NSObject, WKScriptMessageHandler, WKNavigationDelega
         }
 
         // Spinner
+        #if os(visionOS)
+        let loadingSpinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
+        #else
         let loadingSpinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+        #endif
         self.loadingSpinner = loadingSpinner
 
         loadingSpinner.translatesAutoresizingMaskIntoConstraints = true
@@ -472,12 +480,16 @@ final class InAppPresenter: NSObject, WKScriptMessageHandler, WKNavigationDelega
                 }
             } else {
                 DispatchQueue.main.async {
+                    #if !os(visionOS)
                     UIApplication.shared.openURL(url)
+                    #endif
                 }
             }
         } else if type == InAppAction.REQUEST_RATING.rawValue {
             if #available(iOS 10.3.0, *) {
-                SKStoreReviewController.requestReview()
+                #if !os(visionOS)
+                    SKStoreReviewController.requestReview()
+                #endif
             } else {
                 NSLog("Requesting a rating not supported on this iOS version")
             }

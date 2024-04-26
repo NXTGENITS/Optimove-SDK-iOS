@@ -110,17 +110,21 @@ class InAppManager {
         let klass: AnyClass = type(of: UIApplication.shared.delegate!)
 
         // Perform background fetch
+        #if !os(visionOS)
         let performFetchSelector = #selector(UIApplicationDelegate.application(_:performFetchWithCompletionHandler:))
+        #endif
         let fetchType = NSString(string: "v@:@@?").utf8String
         let block: fetchBlock = { (obj: Any, application: UIApplication, completionHandler: @escaping (UIBackgroundFetchResult) -> Void) in
             var fetchResult: UIBackgroundFetchResult = .noData
             let fetchBarrier = DispatchSemaphore(value: 0)
 
             if let _ = ks_existingBackgroundFetchDelegate {
-                unsafeBitCast(ks_existingBackgroundFetchDelegate, to: kumulos_applicationPerformFetchWithCompletionHandler.self)(obj, performFetchSelector, application, { (result: UIBackgroundFetchResult) in
-                    fetchResult = result
-                    fetchBarrier.signal()
-                })
+            #if !os(visionOS)
+            unsafeBitCast(ks_existingBackgroundFetchDelegate, to: kumulos_applicationPerformFetchWithCompletionHandler.self)(obj, performFetchSelector, application, { (result: UIBackgroundFetchResult) in
+                fetchResult = result
+                fetchBarrier.signal()
+            })
+            #endif
             } else {
                 fetchBarrier.signal()
             }
@@ -143,7 +147,9 @@ class InAppManager {
         }
         let kumulosPerformFetch = imp_implementationWithBlock(unsafeBitCast(block, to: AnyObject.self))
 
+        #if !os(visionOS)
         ks_existingBackgroundFetchDelegate = class_replaceMethod(klass, performFetchSelector, kumulosPerformFetch, fetchType)
+        #endif
     }()
 
     // MARK: State helpers

@@ -385,9 +385,11 @@ public extension Optimove {
     /**
          Records a proximity event for an iBeacon.
      */
+    #if !os(visionOS)
     @objc func trackIBeaconProximity(beacon: CLBeacon) {
         Optimobile.trackIBeaconProximity(beacon: beacon)
     }
+    #endif
 
     /// Records a notification open event
     /// - Parameter userInfo - The userInfo dictionary you received in the push notification payload
